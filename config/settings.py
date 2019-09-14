@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third party
-    'django_filters',
     'rest_framework',
+    'rest_framework_filters',
     'drf_yasg',
 
     # local
@@ -141,10 +141,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'common.pagination.PaginationWithCountHeader',
     'PAGE_SIZE': 20,
     'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework_filters.backends.RestFrameworkFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ],

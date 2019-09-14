@@ -12,6 +12,8 @@ Django==2.2.5
 django-environ==0.4.5
 django-filter==2.2.0
 djangorestframework==3.10.3
+djangorestframework-csv==2.1.0
+djangorestframework-filters==1.0.0.dev0
 drf-yasg==1.16.1
 entrypoints==0.3
 factory-boy==2.12.0
@@ -61,6 +63,7 @@ swagger-spec-validator==2.4.3
 testfixtures==6.10.0
 text-unidecode==1.2
 traitlets==4.3.2
+unicodecsv==0.14.1
 uritemplate==3.0.0
 urllib3==1.25.3
 wcwidth==0.1.7
