@@ -2,9 +2,9 @@ from rest_framework.settings import api_settings
 from rest_framework_csv.renderers import CSVRenderer
 
 from common.views import RetrieveOrCreateViewSet
-from works.models import Contributor, Work
+from works.models import Contributor, Source, Work
 from .filters import WorkFilter
-from .serializers import ContributorSerializer, WorkSerializer
+from .serializers import ContributorSerializer, SourceSerializer, WorkSerializer
 
 
 class ContributorViewSet(RetrieveOrCreateViewSet):
@@ -12,6 +12,12 @@ class ContributorViewSet(RetrieveOrCreateViewSet):
     serializer_class = ContributorSerializer
     filterset_fields = ['verified']
     search_fields = ['first_name', 'last_name', 'middle_name']
+
+
+class SourceViewSet(RetrieveOrCreateViewSet):
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+    search_fields = ['identifier']
 
 
 class WorkViewSet(RetrieveOrCreateViewSet):

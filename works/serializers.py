@@ -17,6 +17,12 @@ class ContributorSerializer(serializers.ModelSerializer):
         return contributor
 
 
+class SourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Source
+        fields = ['identifier']
+
+
 class SourceField(serializers.CharField):
     """
     Field that converts string input into existing or newly created Source object

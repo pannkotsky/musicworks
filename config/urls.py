@@ -5,10 +5,11 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
 
-from works.views import ContributorViewSet, WorkViewSet
+from works.views import ContributorViewSet, SourceViewSet, WorkViewSet
 
 router = routers.DefaultRouter()
 router.register(r'contributors', ContributorViewSet)
+router.register(r'sources', SourceViewSet)
 router.register(r'works', WorkViewSet)
 
 # TODO: fix issue with displaying wrong schema for response due to pagination
