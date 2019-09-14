@@ -1,0 +1,7 @@
+*.pyc
+.env
+.idea
+.cache
+*.log
+*.rdb
+.DS_Store

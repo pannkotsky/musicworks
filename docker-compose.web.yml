@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: ./scripts/run.sh
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_NAME=musicworks
+      - PY_AUTORELOAD=1
