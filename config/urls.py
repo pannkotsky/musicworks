@@ -10,6 +10,7 @@ from works.views import WorkViewSet
 router = routers.DefaultRouter()
 router.register(r'works', WorkViewSet)
 
+# TODO: fix issue with displaying wrong schema for response due to pagination
 schema_view = get_schema_view(
    openapi.Info(title='Single Works View API', default_version='v1'),
    public=True,
