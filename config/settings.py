@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # local
+    'works',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'musicworks.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -77,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'musicworks.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
