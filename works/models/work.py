@@ -21,4 +21,4 @@ class Work(models.Model):
 
     @cached_property
     def contributors_str(self):
-        return ' | '.join(map(str, self.contributors.all()))
+        return ', '.join(map(str, self.contributors.all()))
