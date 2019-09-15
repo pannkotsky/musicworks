@@ -12,6 +12,7 @@ Django==2.2.5
 django-environ==0.4.5
 django-filter==2.2.0
 djangorestframework==3.10.3
+djangorestframework-bulk==0.2.1
 djangorestframework-csv==2.1.0
 djangorestframework-filters==1.0.0.dev0
 drf-yasg==1.16.1
