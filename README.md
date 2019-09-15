@@ -70,3 +70,5 @@ Reconciled works can be viewed by accessing http://localhost:8000/api/works/ end
 By default response is paginated in 20 items slices. Filtering, search, ordering options are also available. These customization capabilites via query params can be examined at http://localhost:8000/api/docs/ and by exploring DRF's HTML view. For example, list can be filtered by comma-separated list of iswc's like this: http://localhost:8000/api/works/?iswc__in=T9204649558,T0101974597.
 
 Single entity can be viewed via http://localhost:8000/api/works/T9204649558/ endpoint.
+
+Response time of all endpoints should not suffer too much with data volume increase. While performing matching and reconciliation database lookups use indexes so they should be pretty fast. While retrieving data pagination should prevent delays.
