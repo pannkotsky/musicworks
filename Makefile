@@ -1,3 +1,6 @@
+build:
+	docker-compose -f docker-compose.db.yml -f docker-compose.web.yml build
+
 db_up:
 	docker-compose -f docker-compose.db.yml up -d
 

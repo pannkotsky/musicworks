@@ -5,5 +5,3 @@
 *.log
 *.rdb
 .DS_Store
-staticfiles/*
-!.gitkeep

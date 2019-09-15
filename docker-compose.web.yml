@@ -11,6 +11,7 @@ services:
     depends_on:
       - db
     environment:
+      - DEBUG=False
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
