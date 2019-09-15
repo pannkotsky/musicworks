@@ -97,12 +97,14 @@ DB_PASSWORD = env('DB_PASSWORD', default='postgres')
 DB_HOST = env('DB_HOST', default='db')
 DB_PORT = env('DB_PORT', default='5432')
 DB_NAME = env('DB_NAME', default='musicworks')
+TEST_DB_NAME = env('TEST_DB_NAME', default='')
 DATABASE_URL = env('DATABASE_URL',
                    default=f'postgres://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL, conn_max_age=500)
 }
-
+if TEST_DB_NAME:
+    DATABASES['default']['TEST'] = {'NAME': TEST_DB_NAME}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
