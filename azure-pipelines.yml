@@ -48,7 +48,7 @@ steps:
   displayName: 'Run lint tests'
 
 - script: |
-    python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
+    python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input --keepdb
   displayName: 'Run tests'
 
 - task: PublishTestResults@2
