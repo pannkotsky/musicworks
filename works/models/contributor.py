@@ -1,12 +1,13 @@
+from django.contrib.postgres.fields import CICharField
 from django.db import models
 
 from works.managers import ContributorManager
 
 
 class Contributor(models.Model):
-    first_name = models.CharField(max_length=100, blank=True, default='', db_index=True)
-    last_name = models.CharField(max_length=100, db_index=True)
-    middle_name = models.CharField(max_length=100, blank=True, default='', db_index=True)
+    first_name = CICharField(max_length=100, blank=True, default='', db_index=True)
+    last_name = CICharField(max_length=100, db_index=True)
+    middle_name = CICharField(max_length=100, blank=True, default='', db_index=True)
     # should be set to true when correctness of name parts is verified
     verified = models.BooleanField(default=False)
 

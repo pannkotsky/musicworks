@@ -21,8 +21,8 @@ class WorkManager(Manager):
         """
 
         match_by_source = Q(source=data['source'], id_from_source=data['id_from_source'])
-        match_by_title_and_contributor = Q(title__iexact=data['title'],
-                                           contributors__in=data['contributors'])
+        match_by_title = Q(title=data['title']) | Q(title_synonyms__contains=[data['title']])
+        match_by_title_and_contributor = match_by_title & Q(contributors__in=data['contributors'])
         if data['iswc']:
             match_queries = [
                 Q(iswc=data['iswc']),

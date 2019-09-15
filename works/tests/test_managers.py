@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from works.models import Contributor, Work
-from .factories import ContributorFactory, ContributorWorkFactory, WorkFactory
+from .factories import ContributorFactory, WorkFactory
 
 
 class ContributorManagerTestCase(TestCase):
@@ -123,8 +123,7 @@ class WorkManagerTestCase(TestCase):
         self.assertIsNone(matched)
 
     def test_match_by_title_and_contributor(self):
-        work = WorkFactory(iswc=None)
-        ContributorWorkFactory.create_batch(3, work=work)
+        work = WorkFactory(iswc=None, contributors=ContributorFactory.create_batch(3))
         matched = Work.objects.match({
             'iswc': 'T0000000033',
             'source': 'warner',
@@ -135,8 +134,7 @@ class WorkManagerTestCase(TestCase):
         self.assertEqual(work, matched)
 
     def test_not_match_by_title_and_contributor_if_different_iswc(self):
-        work = WorkFactory(iswc='T0000000032')
-        ContributorWorkFactory.create_batch(3, work=work)
+        work = WorkFactory(iswc='T0000000032', contributors=ContributorFactory.create_batch(3))
         matched = Work.objects.match({
             'iswc': 'T0000000033',
             'source': 'warner',
@@ -153,8 +151,7 @@ class WorkManagerTestCase(TestCase):
         """
 
         work1 = WorkFactory(iswc=None)
-        work2 = WorkFactory(iswc=None)
-        ContributorWorkFactory.create_batch(3, work=work2)
+        work2 = WorkFactory(iswc=None, contributors=ContributorFactory.create_batch(3))
         matched = Work.objects.match({
             'iswc': 'T0000000033',
             'source': work1.source,
@@ -176,13 +173,24 @@ class WorkManagerTestCase(TestCase):
         self.assertEqual(work, matched)
 
     def test_match_by_title_and_contributor_no_iswc_in_data(self):
-        work = WorkFactory(iswc='T0000000032')
-        ContributorWorkFactory.create_batch(3, work=work)
+        work = WorkFactory(iswc='T0000000032', contributors=ContributorFactory.create_batch(3))
         matched = Work.objects.match({
             'iswc': None,
             'source': 'warner',
             'id_from_source': 1,
             'title': work.title,
+            'contributors': [work.contributors.all()[0], ContributorFactory()],
+        })
+        self.assertEqual(work, matched)
+
+    def test_match_by_synonym_title_and_contributor(self):
+        work = WorkFactory(title_synonyms=['Hello', 'From the outside'],
+                           contributors=ContributorFactory.create_batch(3))
+        matched = Work.objects.match({
+            'iswc': None,
+            'source': 'warner',
+            'id_from_source': 1,
+            'title': 'heLLo',
             'contributors': [work.contributors.all()[0], ContributorFactory()],
         })
         self.assertEqual(work, matched)
@@ -194,8 +202,7 @@ class WorkManagerTestCase(TestCase):
         """
 
         work1 = WorkFactory()
-        work2 = WorkFactory()
-        ContributorWorkFactory.create_batch(3, work=work2)
+        work2 = WorkFactory(contributors=ContributorFactory.create_batch(3))
         matched = Work.objects.match({
             'iswc': None,
             'source': work1.source,

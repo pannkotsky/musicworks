@@ -75,10 +75,11 @@ class WorkSerializer(serializers.ModelSerializer):
     source = SourceField()
     id = serializers.IntegerField(source='id_from_source')
     contributors = ContributorsField()
+    synonyms = serializers.ReadOnlyField(source='synonyms_str')
 
     class Meta:
         model = Work
-        fields = ['iswc', 'source', 'id', 'title', 'contributors']
+        fields = ['iswc', 'source', 'id', 'title', 'synonyms', 'contributors']
         validators = []  # Remove a default "unique together" constraint.
 
     def create(self, validated_data):

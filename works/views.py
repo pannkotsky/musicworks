@@ -32,5 +32,5 @@ class WorkViewSet(RetrieveOrCreateViewSet):
 
     def get_renderer_context(self):
         context = super().get_renderer_context()
-        context['header'] = ['title', 'contributors', 'iswc', 'source', 'id']
+        context['header'] = ['title', 'synonyms', 'contributors', 'iswc', 'source', 'id']
         return context

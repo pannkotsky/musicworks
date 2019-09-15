@@ -47,8 +47,7 @@ class ContributorManager(Manager):
         parsed = self.parse_name(name)
 
         try:
-            instance = self.get(first_name__iexact=parsed['first_name'],
-                                last_name__iexact=parsed['last_name'])
+            instance = self.get(first_name=parsed['first_name'], last_name=parsed['last_name'])
         except (self.model.DoesNotExist, self.model.MultipleObjectsReturned):
             return self.create(**parsed), True
 

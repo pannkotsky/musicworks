@@ -28,6 +28,12 @@ class WorkFactory(factory.DjangoModelFactory):
     class Meta:
         model = Work
 
+    @factory.post_generation
+    def contributors(self, create, extracted, **kwargs):
+        if extracted:
+            for item in extracted:
+                ContributorWorkFactory(contributor=item, work=self)
+
 
 class ContributorWorkFactory(factory.DjangoModelFactory):
     contributor = factory.SubFactory(ContributorFactory)
