@@ -37,11 +37,19 @@ steps:
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
 - script: |
-    python -m pip install --upgrade pip setuptools wheel
-    pip install unittest-xml-reporting
-  displayName: 'Install prerequisites'
+    sudo apt-get update
+    sudo apt-get install libpq-dev
+  displayName: 'Install prerequisites 1'
 
 - script: |
-    python -m pip install flake8
+    python -m pip install --upgrade pip setuptools wheel
+    pip install unittest-xml-reporting
+  displayName: 'Install prerequisites 2'
+
+- script: |
+    pip install -r requirements.txt
+  displayName: 'Install prerequisites 3'
+
+- script: |
     flake8 .
   displayName: 'Run lint tests'
