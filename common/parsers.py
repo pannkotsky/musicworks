@@ -14,5 +14,4 @@ class CSVMultipartParser(MultiPartParser):
         if csv_file_field not in data.files:
             return data
         file = data.files[csv_file_field]
-        parsed_data = CSVParser().parse(file, parser_context=parser_context)
-        return list(parsed_data)
+        return CSVParser().parse(file, parser_context=parser_context)
