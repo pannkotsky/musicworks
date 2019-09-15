@@ -1,6 +1,8 @@
+from rest_framework.parsers import FormParser, JSONParser
 from rest_framework.settings import api_settings
 from rest_framework_csv.renderers import CSVRenderer
 
+from common.parsers import CSVMultipartParser
 from common.views import RetrieveOrBulkCreateViewSet
 from works.models import Contributor, Source, Work
 from .filters import WorkFilter
@@ -23,6 +25,7 @@ class SourceViewSet(RetrieveOrBulkCreateViewSet):
 class WorkViewSet(RetrieveOrBulkCreateViewSet):
     queryset = Work.objects.all()
     serializer_class = WorkSerializer
+    parser_classes = [JSONParser, FormParser, CSVMultipartParser]
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES + [CSVRenderer]
     lookup_field = 'iswc'
     filterset_class = WorkFilter

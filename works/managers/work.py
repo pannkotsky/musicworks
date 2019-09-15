@@ -21,22 +21,24 @@ class WorkManager(Manager):
         """
 
         match_by_source = Q(source=data['source'], id_from_source=data['id_from_source'])
-        match_by_title = Q(title=data['title']) | Q(title_synonyms__contains=[data['title']])
-        match_by_title_and_contributor = match_by_title & Q(contributors__in=data['contributors'])
+        match_by_title = Q(title=data['title'])
+        match_by_title_synonyms = Q(title_synonyms__contains=[data['title']])
+        match_by_contributor = Q(contributors__in=data['contributors'])
         if data['iswc']:
             match_queries = [
                 Q(iswc=data['iswc']),
                 Q(iswc=None) & match_by_source,
-                Q(iswc=None) & match_by_title_and_contributor,
+                Q(iswc=None) & match_by_title & match_by_contributor,
+                Q(iswc=None) & match_by_title_synonyms & match_by_contributor,
             ]
         else:
             match_queries = [
                 match_by_source,
-                match_by_title_and_contributor,
+                match_by_title & match_by_contributor,
+                match_by_title_synonyms & match_by_contributor
             ]
         for query in match_queries:
-            try:
-                return self.get(query)
-            except self.model.DoesNotExist:
-                continue
+            instances = self.filter(query).distinct('pk')
+            if instances.count() == 1:
+                return instances[0]
         return None

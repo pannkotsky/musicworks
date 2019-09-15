@@ -71,16 +71,22 @@ class DefaultWorkSerializer(serializers.ModelSerializer):
 
 class WorkSerializer(serializers.ModelSerializer):
     # specify field explicitly to disable unique validation
-    iswc = serializers.CharField(max_length=11, allow_null=True)
+    iswc = serializers.CharField(max_length=11, allow_null=True, allow_blank=True)
     source = SourceField()
     id = serializers.IntegerField(source='id_from_source')
     contributors = ContributorsField()
     synonyms = serializers.ReadOnlyField(source='synonyms_str')
+    csv_file = serializers.FileField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Work
-        fields = ['iswc', 'source', 'id', 'title', 'synonyms', 'contributors']
+        fields = ['iswc', 'source', 'id', 'title', 'synonyms', 'contributors', 'csv_file']
         validators = []  # Remove a default "unique together" constraint.
+
+    def to_representation(self, instance):
+        if not isinstance(instance, Work):
+            return instance
+        return super().to_representation(instance)
 
     def create(self, validated_data):
         # Try to get matched instance by data,

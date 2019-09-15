@@ -74,3 +74,8 @@ class Work(models.Model):
             self.save()
 
         return self
+
+    def save(self, *args, **kwargs):
+        if self.iswc is not None and self.iswc.strip() == '':
+            self.iswc = None
+        return super().save(*args, **kwargs)
