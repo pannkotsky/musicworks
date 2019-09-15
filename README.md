@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/kovvalole/kovvalole/_apis/build/status/pannkotsky.musicworks?branchName=master)](https://dev.azure.com/kovvalole/kovvalole/_build/latest?definitionId=1&branchName=master)
+
 # Works Single View
 
 A Single View application aggregates and reconciles data from multiple sources to create a single view of an entity, in this case, a musical work.
