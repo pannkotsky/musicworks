@@ -33,6 +33,21 @@ class Work(models.Model):
         return '|'.join(self.title_synonyms)
 
     def reconcile(self, data):
+        """
+        Find what information on the object can be added/updated from the new data
+        about the object.
+
+        Steps are the following:
+        1. Assign iswc if it's not set on the object and present in the data.
+        2. If title from the data is different from the current title, add it to title_synonyms.
+        3. If there are new contributors in the data, add them to object relations.
+        4. If something from above happened set source and id_from_source from the data and
+           save the object.
+
+        :param data: dict of prepared data for each field.
+        :return: updated Work object.
+        """
+
         from .contributor_work import ContributorWork
 
         changed = False
