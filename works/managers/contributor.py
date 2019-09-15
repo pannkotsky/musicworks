@@ -2,8 +2,7 @@ from django.db.models.manager import Manager
 
 
 class ContributorManager(Manager):
-    @staticmethod
-    def parse_name(name):
+    def parse_name(self, name):
         """
         Assign name parts from a single string.
 
@@ -14,6 +13,8 @@ class ContributorManager(Manager):
         # start with a simplest algorithm
         # ideally some AI-based solution trained on real names should be applied
         # until then new contributors list should be regularly verified by admins
+        # TODO: analyze verified names in DB
+
         first_name, middle_name, last_name = '', '', ''
         words = name.split(' ')
         words_count = len(words)
@@ -46,12 +47,14 @@ class ContributorManager(Manager):
         parsed = self.parse_name(name)
 
         try:
-            instance = self.get(first_name=parsed['first_name'], last_name=parsed['last_name'])
+            instance = self.get(first_name__iexact=parsed['first_name'],
+                                last_name__iexact=parsed['last_name'])
         except (self.model.DoesNotExist, self.model.MultipleObjectsReturned):
             return self.create(**parsed), True
 
         if parsed['middle_name']:
-            if instance.middle_name and instance.middle_name != parsed['middle_name']:
+            if (instance.middle_name and
+                    instance.middle_name.lower() != parsed['middle_name'].lower()):
                 return self.create(**parsed), True
             if not instance.middle_name:
                 instance.middle_name = parsed['middle_name']

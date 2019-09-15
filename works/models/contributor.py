@@ -4,9 +4,9 @@ from works.managers import ContributorManager
 
 
 class Contributor(models.Model):
-    first_name = models.CharField(max_length=100, blank=True, default='')
-    last_name = models.CharField(max_length=100)
-    middle_name = models.CharField(max_length=100, blank=True, default='')
+    first_name = models.CharField(max_length=100, blank=True, default='', db_index=True)
+    last_name = models.CharField(max_length=100, db_index=True)
+    middle_name = models.CharField(max_length=100, blank=True, default='', db_index=True)
     # should be set to true when correctness of name parts is verified
     verified = models.BooleanField(default=False)
 

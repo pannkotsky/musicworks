@@ -40,7 +40,7 @@ class SourceField(serializers.CharField):
 class ContributorsField(serializers.CharField):
     """
     Field that converts string of concatenated contributors names into list of existing and/or
-    newly created Contributor objects, and returns concatenated Contributors' full names for
+    newly created Contributor ids, and returns concatenated Contributors' full names for
     output.
     """
 
@@ -50,14 +50,28 @@ class ContributorsField(serializers.CharField):
             contributor_serializer = ContributorSerializer(data={'full_name': full_name})
             contributor_serializer.is_valid(raise_exception=True)
             contributor = contributor_serializer.save()
-            contributors.append(contributor)
+            contributors.append(contributor.pk)
         return contributors
 
     def to_representation(self, value):
         return '|'.join(map(str, value.all()))
 
 
+class DefaultWorkSerializer(serializers.ModelSerializer):
+    contributors = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Contributor.objects.all())
+
+    class Meta:
+        model = Work
+        fields = ['iswc', 'source', 'id_from_source', 'title', 'contributors']
+
+    def update(self, instance, validated_data):
+        return instance.reconcile(validated_data)
+
+
 class WorkSerializer(serializers.ModelSerializer):
+    # specify field explicitly to disable unique validation
+    iswc = serializers.CharField(max_length=11, allow_null=True)
     source = SourceField()
     id = serializers.IntegerField(source='id_from_source')
     contributors = ContributorsField()
@@ -65,3 +79,15 @@ class WorkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Work
         fields = ['iswc', 'source', 'id', 'title', 'contributors']
+        validators = []  # Remove a default "unique together" constraint.
+
+    def create(self, validated_data):
+        # Try to get matched instance by data,
+        # then delegate validation and creation/update logic to DefaultWorkSerializer
+        # Update will happen if instance is None, e.g. nothing matched,
+        # creation will happen otherwise
+
+        instance = Work.objects.match(validated_data)
+        default_serializer = DefaultWorkSerializer(instance=instance, data=validated_data)
+        default_serializer.is_valid(raise_exception=True)
+        return default_serializer.save()

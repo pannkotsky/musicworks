@@ -1,8 +1,8 @@
 from django.test import TestCase
 
 from works.models import Contributor
-from works.serializers import ContributorSerializer, ContributorsField, SourceField
-from .factories import ContributorFactory, SourceFactory
+from works.serializers import ContributorSerializer, ContributorsField, SourceField, WorkSerializer
+from .factories import ContributorFactory, SourceFactory, WorkFactory
 
 
 class ContributorSerializerTestCase(TestCase):
@@ -42,12 +42,43 @@ class ContributorsFieldTestCase(TestCase):
         c = ContributorFactory(first_name='Dave', last_name='Gahan')
         value = ContributorsField().to_internal_value('Dave Gahan|Martin Gore')
         self.assertEqual(2, len(value))
-        self.assertEqual(c, value[0])
-        self.assertEqual('Martin', value[1].first_name)
-        self.assertEqual('Gore', value[1].last_name)
+        self.assertEqual(c.pk, value[0])
+        c1 = Contributor.objects.get(pk=value[1])
+        self.assertEqual('Martin', c1.first_name)
+        self.assertEqual('Gore', c1.last_name)
 
     def test_representation(self):
         ContributorFactory(first_name='Dave', last_name='Gahan')
         ContributorFactory(first_name='Martin', last_name='Gore')
         value = ContributorsField().to_representation(Contributor.objects)
         self.assertEqual('Dave Gahan|Martin Gore', value)
+
+
+class WorkSerializerTestCase(TestCase):
+    def test_update_matched_instance(self):
+        work = WorkFactory(iswc='T0000000009')
+        serializer = WorkSerializer(data={
+            'iswc': 'T0000000009',
+            'source': 'warner',
+            'id': 1,
+            'title': 'Hello',
+            'contributors': 'Adele',
+        })
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(work, serializer.save())
+
+    def test_create_new_instance(self):
+        serializer = WorkSerializer(data={
+            'iswc': 'T0000000009',
+            'source': 'warner',
+            'id': 1,
+            'title': 'Hello',
+            'contributors': 'Adele',
+        })
+        self.assertTrue(serializer.is_valid())
+        work = serializer.save()
+        self.assertEqual(work.iswc, 'T0000000009')
+        self.assertEqual(work.source.identifier, 'warner')
+        self.assertEqual(work.id_from_source, 1)
+        self.assertEqual(work.title, 'Hello')
+        self.assertEqual(work.contributors.first().last_name, 'Adele')
